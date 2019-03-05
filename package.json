@@ -1,19 +1,16 @@
 {
   "author": "Jason Salzman",
   "contributors": [
-    {
-      "name": "Eric Johnson",
-      "email": "ej2586@gmail.com"
-    }
+    "Eric Johnson <ej2586@gmail.com>"
   ],
-  "name": "react-add-to-calendar",
+  "name": "@ej2586/react-add-to-calendar",
   "description": "A simple and reusable add to calendar button component for React",
   "version": "0.1.6",
   "license": "MIT",
   "homepage": "https://github.com/ej020586/react-add-to-calendar",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ej020586/react-add-to-calendar.git"
+    "url": "git+https://github.com/ej020586/react-add-to-calendar.git"
   },
   "bugs": {
     "url": "https://github.com/ej020586/react-add-to-calendar/issues"
@@ -109,5 +106,12 @@
     "prepublish": "npm run build",
     "codecov": "cat coverage/*/lcov.info | ./node_modules/codecov/bin/codecov"
   },
-  "dependencies": {}
+  "dependencies": {
+    "moment": "^2.18.1"
+  },
+  "directories": {
+    "doc": "docs",
+    "lib": "lib",
+    "test": "test"
+  }
 }

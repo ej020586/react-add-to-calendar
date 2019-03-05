@@ -7,3 +7,5 @@ lib
 tmp
 coverage
 0.md
+
+.history/
