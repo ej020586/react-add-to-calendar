@@ -10,7 +10,6 @@ const AddToCalendarStyled = styled(AddToCalendar)`
 
 export default class StyledComponentExample extends React.Component {
   render() {
-    debugger;
     let event = {
       title: "Sample Event",
       description: "This is the sample event provided as an example only",
@@ -67,10 +66,30 @@ export default class StyledComponentExample extends React.Component {
           </code>
           <code className="jsx">
             {"<AddToCalendarStyled buttonLabel='Add' event={event} />"}
+            {
+              "<AddToCalendarStyled buttonTemplate= buttonLabel='Add' event={event} />"
+            }
           </code>
         </pre>
         <div className="column">
           <AddToCalendarStyled buttonLabel="Add" event={event} />
+          <AddToCalendarStyled
+            buttonLabel="Add"
+            buttonTemplate={(props, toggleCallback) => {
+              return (
+                <div className={props.buttonWrapperClass}>
+                  <button
+                    type="button"
+                    className={props.buttonClass}
+                    onClick={toggleCallback}
+                  >
+                    {props.buttonLabel}
+                  </button>
+                </div>
+              );
+            }}
+            event={event}
+          />
         </div>
       </div>
     );

@@ -128,8 +128,12 @@ export default class ReactAddToCalendar extends React.Component {
   renderButton() {
     let buttonLabel = this.props.buttonLabel;
     let buttonIcon = null;
-    let template = Object.keys(this.props.buttonTemplate);
 
+    // allow buttonTemplate to be render prop
+    let btnTemplateIsFunction = typeof this.props.buttonTemplate === "function";
+    let template = btnTemplateIsFunction
+      ? this.props.buttonTemplate
+      : Object.keys(this.props.buttonTemplate);
     if (template[0] !== "textOnly") {
       const iconPlacement = this.props.buttonTemplate[template];
       const buttonClassPrefix =
@@ -166,7 +170,12 @@ export default class ReactAddToCalendar extends React.Component {
       ? this.props.buttonClassClosed + " " + this.props.buttonClassOpen
       : this.props.buttonClassClosed;
 
-    return (
+    return btnTemplateIsFunction ? (
+      template(
+        { ...this.props, buttonClass, buttonLabel },
+        this.toggleCalendarDropdown
+      )
+    ) : (
       <div className={this.props.buttonWrapperClass}>
         <a className={buttonClass} onClick={this.toggleCalendarDropdown}>
           {buttonLabel}
@@ -207,7 +216,7 @@ ReactAddToCalendar.propTypes = {
   buttonClassClosed: PropTypes.string,
   buttonClassOpen: PropTypes.string,
   buttonLabel: PropTypes.string,
-  buttonTemplate: PropTypes.object,
+  buttonTemplate: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
   buttonIconClass: PropTypes.string,
   useFontAwesomeIcons: PropTypes.bool,
   buttonWrapperClass: PropTypes.string,
