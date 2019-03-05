@@ -9,6 +9,7 @@ import ChangeDropdownOrder from "./examples/changeDropdownOrder";
 import RemoveDropdownItem from "./examples/removeDropdownItem";
 import ChangeDropdownLabels from "./examples/changeDropdownLabels";
 import CodeExampleComponent from "./code_example_component";
+import StyledComponentExample from "./examples/styledComponents";
 
 import "react-add-to-calendar/dist/react-add-to-calendar.css";
 import "./style.scss";
@@ -45,6 +46,10 @@ const examples = [
   {
     title: "Change Dropdown Labels",
     component: ChangeDropdownLabels
+  },
+  {
+    title: "Styled Component",
+    component: StyledComponentExample
   }
 ];
 
@@ -56,9 +61,10 @@ export default class ExampleComponents extends React.Component {
   renderExamples() {
     return examples.map((example, index) => (
       <CodeExampleComponent
-          key={`example-${index}`}
-          id={index}
-          title={example.title}>
+        key={`example-${index}`}
+        id={index}
+        title={example.title}
+      >
         {<example.component />}
       </CodeExampleComponent>
     ));
@@ -67,9 +73,7 @@ export default class ExampleComponents extends React.Component {
   renderLeftColumn() {
     return examples.map((example, index) => (
       <li className="examples__navigation-item" key={`link-${index}`}>
-        <a href={`#example-${index}`}>
-          {example.title}
-        </a>
+        <a href={`#example-${index}`}>{example.title}</a>
       </li>
     ));
   }
@@ -78,12 +82,8 @@ export default class ExampleComponents extends React.Component {
     return (
       <div>
         <h1>Examples</h1>
-        <ul className="examples__navigation">
-          {this.renderLeftColumn()}
-        </ul>
-        <div className="examples">
-          {this.renderExamples()}
-        </div>
+        <ul className="examples__navigation">{this.renderLeftColumn()}</ul>
+        <div className="examples">{this.renderExamples()}</div>
       </div>
     );
   }

@@ -29,4 +29,4 @@ after_success:
   - bash <(curl -s https://codecov.io/bash)
 notifications:
   email:
-    - jason@project41innovations.com
+    - ej2586@gmail.com

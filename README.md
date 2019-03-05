@@ -20,24 +20,24 @@ npm install react-add-to-calendar --save
 You’ll need to install React and Moment separately since they are not included in the package. Below is a simple example on how to use the Add to Calendar button in a React view.
 
 ```js
-import React from 'react';
-import AddToCalendar from 'react-add-to-calendar';
+import React from "react";
+import AddToCalendar from "react-add-to-calendar";
 
 class Example extends React.Component {
-  static displayName = 'Example';
+  static displayName = "Example";
   state = {
     event: {
-      title: 'Sample Event',
-      description: 'This is the sample event provided as an example only',
-      location: 'Portland, OR',
-      startTime: '2016-09-16T20:15:00-04:00',
-      endTime: '2016-09-16T21:45:00-04:00'
+      title: "Sample Event",
+      description: "This is the sample event provided as an example only",
+      location: "Portland, OR",
+      startTime: "2016-09-16T20:15:00-04:00",
+      endTime: "2016-09-16T21:45:00-04:00"
     }
   };
 
   render() {
-    return <AddToCalendar event={this.state.event}/>;
-  };
+    return <AddToCalendar event={this.state.event} />;
+  }
 }
 ```
 
@@ -66,21 +66,27 @@ See [here](https://github.com/jasonsalzman/react-add-to-calendar/blob/master/doc
 I'll do my best to stay compatible with the latest version of React. I can't guarantee support for all older versions of React.
 
 Latest compatible versions:
+
 - React 16.2.0 or newer
 
 ### Browser Support
 
 The Add to Calendar button is compatible with the latest versions of Chrome, Firefox, Safari, and IE10+.
 
-Unfortunately it is difficult to support legacy browsers while maintaining the ability to develop new features in the future.  For IE9 support, it is known that the [classlist polyfill](https://www.npmjs.com/package/classlist-polyfill) is needed, but this may change or break at any point in the future.
+Unfortunately it is difficult to support legacy browsers while maintaining the ability to develop new features in the future. For IE9 support, it is known that the [classlist polyfill](https://www.npmjs.com/package/classlist-polyfill) is needed, but this may change or break at any point in the future.
 
 ## Local Development
 
+- Before npm install, install GEM on osx
+
+  `sudo gem install scss_lint -n /usr/local/bin`
+
 The `master` branch contains the latest version of the Add to Calendar component. To start your example app, you can run `npm start`. This starts a simple webserver on http://localhost:8080.
 
-You can run `npm test` to execute the test suite and linters. To help you develop the component I’ve set up some tests that covers the basic functionality (can be found in  `/tests`). I highly recommend you add tests when you’re adding new functionality.
+You can run `npm test` to execute the test suite and linters. To help you develop the component I’ve set up some tests that covers the basic functionality (can be found in `/tests`). I highly recommend you add tests when you’re adding new functionality.
 
 ### The examples
+
 The examples are hosted within the docs folder and are ran in the simple add that loads the Add to Calendar button. To extend the examples with a new example, you can simply duplicate one of the existing examples and change the unique properties of your example.
 
 ## License

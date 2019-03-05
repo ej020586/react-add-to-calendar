@@ -140,7 +140,9 @@ export default class ReactAddToCalendar extends React.Component {
 
       const mainButtonIconClass =
         template[0] === "caret"
-          ? this.state.optionsOpen ? "caret-up" : "caret-down"
+          ? this.state.optionsOpen
+            ? "caret-up"
+            : "caret-down"
           : template[0];
 
       let buttonIconClass = `${buttonClassPrefix} ${iconPrefix}${mainButtonIconClass}`;
@@ -185,7 +187,13 @@ export default class ReactAddToCalendar extends React.Component {
     }
 
     return (
-      <div className={this.props.rootClass}>
+      <div
+        className={
+          this.props.className
+            ? this.props.className + " " + this.props.rootClass
+            : this.props.rootClass
+        }
+      >
         {addToCalendarBtn}
         {options}
       </div>
