@@ -24303,6 +24303,8 @@
 	  value: true
 	});
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(2);
@@ -24454,8 +24456,10 @@
 	    value: function renderButton() {
 	      var buttonLabel = this.props.buttonLabel;
 	      var buttonIcon = null;
-	      var template = Object.keys(this.props.buttonTemplate);
 
+	      // allow buttonTemplate to be render prop
+	      var btnTemplateIsFunction = typeof this.props.buttonTemplate === "function";
+	      var template = btnTemplateIsFunction ? this.props.buttonTemplate : Object.keys(this.props.buttonTemplate);
 	      if (template[0] !== "textOnly") {
 	        var iconPlacement = this.props.buttonTemplate[template];
 	        var buttonClassPrefix = this.props.buttonIconClass === "react-add-to-calendar__icon--" ? "" + this.props.buttonIconClass + iconPlacement : this.props.buttonIconClass;
@@ -24481,7 +24485,7 @@
 
 	      var buttonClass = this.state.optionsOpen ? this.props.buttonClassClosed + " " + this.props.buttonClassOpen : this.props.buttonClassClosed;
 
-	      return _react2.default.createElement(
+	      return btnTemplateIsFunction ? template(_extends({}, this.props, { buttonClass: buttonClass, buttonLabel: buttonLabel }), this.toggleCalendarDropdown) : _react2.default.createElement(
 	        "div",
 	        { className: this.props.buttonWrapperClass },
 	        _react2.default.createElement(
@@ -24527,7 +24531,7 @@
 	  buttonClassClosed: _propTypes2.default.string,
 	  buttonClassOpen: _propTypes2.default.string,
 	  buttonLabel: _propTypes2.default.string,
-	  buttonTemplate: _propTypes2.default.object,
+	  buttonTemplate: _propTypes2.default.oneOfType([_propTypes2.default.object, _propTypes2.default.func]),
 	  buttonIconClass: _propTypes2.default.string,
 	  useFontAwesomeIcons: _propTypes2.default.bool,
 	  buttonWrapperClass: _propTypes2.default.string,
@@ -42701,7 +42705,6 @@
 	  _createClass(StyledComponentExample, [{
 	    key: "render",
 	    value: function render() {
-	      debugger;
 	      var event = {
 	        title: "Sample Event",
 	        description: "This is the sample event provided as an example only",
@@ -42762,13 +42765,33 @@
 	          _react2.default.createElement(
 	            "code",
 	            { className: "jsx" },
-	            "<AddToCalendarStyled buttonLabel='Add' event={event} />"
+	            "<AddToCalendarStyled buttonLabel='Add' event={event} />",
+	            "<AddToCalendarStyled buttonTemplate= buttonLabel='Add' event={event} />"
 	          )
 	        ),
 	        _react2.default.createElement(
 	          "div",
 	          { className: "column" },
-	          _react2.default.createElement(AddToCalendarStyled, { buttonLabel: "Add", event: event })
+	          _react2.default.createElement(AddToCalendarStyled, { buttonLabel: "Add", event: event }),
+	          _react2.default.createElement(AddToCalendarStyled, {
+	            buttonLabel: "Add",
+	            buttonTemplate: function buttonTemplate(props, toggleCallback) {
+	              return _react2.default.createElement(
+	                "div",
+	                { className: props.buttonWrapperClass },
+	                _react2.default.createElement(
+	                  "button",
+	                  {
+	                    type: "button",
+	                    className: props.buttonClass,
+	                    onClick: toggleCallback
+	                  },
+	                  props.buttonLabel
+	                )
+	              );
+	            },
+	            event: event
+	          })
 	        )
 	      );
 	    }

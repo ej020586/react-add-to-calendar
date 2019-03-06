@@ -17,7 +17,7 @@ export default class ReactAddToCalendar extends React.Component {
     this.handleDropdownLinkClick = this.handleDropdownLinkClick.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     // polyfill for startsWith to fix IE bug
     if (!String.prototype.startsWith) {
       String.prototype.startsWith = function(searchString, position) {
@@ -198,7 +198,7 @@ export default class ReactAddToCalendar extends React.Component {
     return (
       <div
         className={
-          this.props.className
+          !!this.props.className
             ? this.props.className + " " + this.props.rootClass
             : this.props.rootClass
         }
@@ -218,6 +218,7 @@ ReactAddToCalendar.propTypes = {
   buttonLabel: PropTypes.string,
   buttonTemplate: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
   buttonIconClass: PropTypes.string,
+  className: PropTypes.string,
   useFontAwesomeIcons: PropTypes.bool,
   buttonWrapperClass: PropTypes.string,
   displayItemIcons: PropTypes.bool,
@@ -240,6 +241,7 @@ ReactAddToCalendar.defaultProps = {
   buttonLabel: "Add to My Calendar",
   buttonTemplate: { caret: "right" },
   buttonIconClass: "react-add-to-calendar__icon--",
+  className: null,
   useFontAwesomeIcons: true,
   buttonWrapperClass: "react-add-to-calendar__wrapper",
   displayItemIcons: true,
