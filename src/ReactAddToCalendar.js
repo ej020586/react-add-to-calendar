@@ -4,20 +4,71 @@ import PropTypes from "prop-types";
 import helpersClass from "./helpers";
 const helpers = new helpersClass();
 
+/* eslint-disable */
+function listItemTemplate({
+  listItem,
+  event,
+  itemClick,
+  url,
+  displayItemIcons
+}) {
+  let currentItem = Object.keys(listItem)[0];
+  let currentLabel = listItem[currentItem];
+
+  let icon = null;
+  if (displayItemIcons) {
+    let currentIcon =
+      currentItem === "outlook" || currentItem === "outlookcom"
+        ? "windows"
+        : currentItem;
+    icon = <i className={"fa fa-" + currentIcon} />;
+  }
+
+  return (
+    <li key={helpers.getRandomKey()}>
+      <a
+        className={currentItem + "-link"}
+        onClick={itemClick}
+        href={url}
+        target="_blank"
+      >
+        {icon}
+        {currentLabel}
+      </a>
+    </li>
+  );
+}
+
+listItemTemplate.propTypes = {
+  displayItemIcons: PropTypes.bool,
+  listItem: PropTypes.object,
+  event: PropTypes.object,
+  itemClick: PropTypes.func,
+  url: PropTypes.string
+};
+
+function dropdownTemplate(items, className) {
+  return (
+    <div className={className}>
+      <ul>{items}</ul>
+    </div>
+  );
+}
+
 export default class ReactAddToCalendar extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       optionsOpen: props.optionsOpen || false,
-      isCrappyIE: false
+      isCrappyIE: this.checkIE()
     };
 
     this.toggleCalendarDropdown = this.toggleCalendarDropdown.bind(this);
     this.handleDropdownLinkClick = this.handleDropdownLinkClick.bind(this);
   }
 
-  componentDidMount() {
+  checkIE() {
     // polyfill for startsWith to fix IE bug
     if (!String.prototype.startsWith) {
       String.prototype.startsWith = function(searchString, position) {
@@ -34,8 +85,7 @@ export default class ReactAddToCalendar extends React.Component {
     ) {
       isCrappyIE = true;
     }
-
-    this.setState({ isCrappyIE: isCrappyIE });
+    return isCrappyIE;
   }
 
   toggleCalendarDropdown() {
@@ -87,42 +137,19 @@ export default class ReactAddToCalendar extends React.Component {
     let self = this;
 
     let items = this.props.listItems.map(listItem => {
-      let currentItem = Object.keys(listItem)[0];
-      let currentLabel = listItem[currentItem];
-
-      let icon = null;
-      if (self.props.displayItemIcons) {
-        let currentIcon =
-          currentItem === "outlook" || currentItem === "outlookcom"
-            ? "windows"
-            : currentItem;
-        icon = <i className={"fa fa-" + currentIcon} />;
-      }
-
-      return (
-        <li key={helpers.getRandomKey()}>
-          <a
-            className={currentItem + "-link"}
-            onClick={self.handleDropdownLinkClick}
-            href={helpers.buildUrl(
-              self.props.event,
-              currentItem,
-              self.state.isCrappyIE
-            )}
-            target="_blank"
-          >
-            {icon}
-            {currentLabel}
-          </a>
-        </li>
-      );
+      return this.props.listItemTemplate({
+        listItem,
+        event: self.props.event,
+        itemClick: self.handleDropdownLinkClick,
+        url: helpers.buildUrl(
+          self.props.event,
+          Object.keys(listItem)[0], //label of listItem[label]
+          self.state.isCrappyIE
+        )
+      });
     });
 
-    return (
-      <div className={this.props.dropdownClass}>
-        <ul>{items}</ul>
-      </div>
-    );
+    return this.props.dropdownTemplate(items, this.props.dropdownClass);
   }
 
   renderButton() {
@@ -224,6 +251,7 @@ ReactAddToCalendar.propTypes = {
   displayItemIcons: PropTypes.bool,
   optionsOpen: PropTypes.bool,
   dropdownClass: PropTypes.string,
+  dropdownTemplate: PropTypes.func,
   event: PropTypes.shape({
     title: PropTypes.string,
     description: PropTypes.string,
@@ -232,6 +260,7 @@ ReactAddToCalendar.propTypes = {
     endTime: PropTypes.string
   }).isRequired,
   listItems: PropTypes.arrayOf(PropTypes.object),
+  listItemTemplate: PropTypes.func,
   rootClass: PropTypes.string
 };
 
@@ -247,6 +276,7 @@ ReactAddToCalendar.defaultProps = {
   displayItemIcons: true,
   optionsOpen: false,
   dropdownClass: "react-add-to-calendar__dropdown",
+  dropdownTemplate: dropdownTemplate,
   event: {
     title: "Sample Event",
     description: "This is the sample event provided as an example only",
@@ -261,5 +291,6 @@ ReactAddToCalendar.defaultProps = {
     { outlookcom: "Outlook.com" },
     { yahoo: "Yahoo" }
   ],
+  listItemTemplate: listItemTemplate,
   rootClass: "react-add-to-calendar"
 };

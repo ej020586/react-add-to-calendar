@@ -75,6 +75,18 @@ export default class StyledComponentExample extends React.Component {
           <AddToCalendarStyled buttonLabel="Add" event={event} />
           <AddToCalendarStyled
             buttonLabel="Add"
+            listItemTemplate={({ listItem, event, itemClick, url }) => {
+              let currentItem = Object.keys(listItem)[0];
+              let currentLabel = listItem[currentItem];
+
+              return (
+                <li key={currentLabel}>
+                  <a href={url} target="_blank">
+                    {currentLabel}
+                  </a>
+                </li>
+              );
+            }}
             buttonTemplate={(props, toggleCallback) => {
               return (
                 <div className={props.buttonWrapperClass}>
