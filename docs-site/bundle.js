@@ -24329,6 +24329,60 @@
 
 	var helpers = new _helpers2.default();
 
+	/* eslint-disable */
+	function listItemTemplate(_ref) {
+	  var listItem = _ref.listItem,
+	      event = _ref.event,
+	      itemClick = _ref.itemClick,
+	      url = _ref.url,
+	      displayItemIcons = _ref.displayItemIcons;
+
+	  var currentItem = Object.keys(listItem)[0];
+	  var currentLabel = listItem[currentItem];
+
+	  var icon = null;
+	  if (displayItemIcons) {
+	    var currentIcon = currentItem === "outlook" || currentItem === "outlookcom" ? "windows" : currentItem;
+	    icon = _react2.default.createElement("i", { className: "fa fa-" + currentIcon });
+	  }
+
+	  return _react2.default.createElement(
+	    "li",
+	    { key: helpers.getRandomKey() },
+	    _react2.default.createElement(
+	      "a",
+	      {
+	        className: currentItem + "-link",
+	        onClick: itemClick,
+	        href: url,
+	        target: "_blank"
+	      },
+	      icon,
+	      currentLabel
+	    )
+	  );
+	}
+
+	listItemTemplate.propTypes = {
+	  displayItemIcons: _propTypes2.default.bool,
+	  listItem: _propTypes2.default.object,
+	  event: _propTypes2.default.object,
+	  itemClick: _propTypes2.default.func,
+	  url: _propTypes2.default.string
+	};
+
+	function dropdownTemplate(items, className) {
+	  return _react2.default.createElement(
+	    "div",
+	    { className: className },
+	    _react2.default.createElement(
+	      "ul",
+	      null,
+	      items
+	    )
+	  );
+	}
+
 	var ReactAddToCalendar = function (_React$Component) {
 	  _inherits(ReactAddToCalendar, _React$Component);
 
@@ -24339,7 +24393,7 @@
 
 	    _this.state = {
 	      optionsOpen: props.optionsOpen || false,
-	      isCrappyIE: false
+	      isCrappyIE: _this.checkIE()
 	    };
 
 	    _this.toggleCalendarDropdown = _this.toggleCalendarDropdown.bind(_this);
@@ -24348,8 +24402,8 @@
 	  }
 
 	  _createClass(ReactAddToCalendar, [{
-	    key: "componentWillMount",
-	    value: function componentWillMount() {
+	    key: "checkIE",
+	    value: function checkIE() {
 	      // polyfill for startsWith to fix IE bug
 	      if (!String.prototype.startsWith) {
 	        String.prototype.startsWith = function (searchString, position) {
@@ -24362,8 +24416,7 @@
 	      if (typeof window !== "undefined" && window.navigator.msSaveOrOpenBlob && window.Blob) {
 	        isCrappyIE = true;
 	      }
-
-	      this.setState({ isCrappyIE: isCrappyIE });
+	      return isCrappyIE;
 	    }
 	  }, {
 	    key: "toggleCalendarDropdown",
@@ -24412,44 +24465,21 @@
 	  }, {
 	    key: "renderDropdown",
 	    value: function renderDropdown() {
+	      var _this2 = this;
+
 	      var self = this;
 
 	      var items = this.props.listItems.map(function (listItem) {
-	        var currentItem = Object.keys(listItem)[0];
-	        var currentLabel = listItem[currentItem];
-
-	        var icon = null;
-	        if (self.props.displayItemIcons) {
-	          var currentIcon = currentItem === "outlook" || currentItem === "outlookcom" ? "windows" : currentItem;
-	          icon = _react2.default.createElement("i", { className: "fa fa-" + currentIcon });
-	        }
-
-	        return _react2.default.createElement(
-	          "li",
-	          { key: helpers.getRandomKey() },
-	          _react2.default.createElement(
-	            "a",
-	            {
-	              className: currentItem + "-link",
-	              onClick: self.handleDropdownLinkClick,
-	              href: helpers.buildUrl(self.props.event, currentItem, self.state.isCrappyIE),
-	              target: "_blank"
-	            },
-	            icon,
-	            currentLabel
-	          )
-	        );
+	        return _this2.props.listItemTemplate({
+	          listItem: listItem,
+	          event: self.props.event,
+	          itemClick: self.handleDropdownLinkClick,
+	          url: helpers.buildUrl(self.props.event, Object.keys(listItem)[0], //label of listItem[label]
+	          self.state.isCrappyIE)
+	        });
 	      });
 
-	      return _react2.default.createElement(
-	        "div",
-	        { className: this.props.dropdownClass },
-	        _react2.default.createElement(
-	          "ul",
-	          null,
-	          items
-	        )
-	      );
+	      return this.props.dropdownTemplate(items, this.props.dropdownClass);
 	    }
 	  }, {
 	    key: "renderButton",
@@ -24511,7 +24541,7 @@
 	      return _react2.default.createElement(
 	        "div",
 	        {
-	          className: this.props.className ? this.props.className + " " + this.props.rootClass : this.props.rootClass
+	          className: !!this.props.className ? this.props.className + " " + this.props.rootClass : this.props.rootClass
 	        },
 	        addToCalendarBtn,
 	        options
@@ -24533,11 +24563,13 @@
 	  buttonLabel: _propTypes2.default.string,
 	  buttonTemplate: _propTypes2.default.oneOfType([_propTypes2.default.object, _propTypes2.default.func]),
 	  buttonIconClass: _propTypes2.default.string,
+	  className: _propTypes2.default.string,
 	  useFontAwesomeIcons: _propTypes2.default.bool,
 	  buttonWrapperClass: _propTypes2.default.string,
 	  displayItemIcons: _propTypes2.default.bool,
 	  optionsOpen: _propTypes2.default.bool,
 	  dropdownClass: _propTypes2.default.string,
+	  dropdownTemplate: _propTypes2.default.func,
 	  event: _propTypes2.default.shape({
 	    title: _propTypes2.default.string,
 	    description: _propTypes2.default.string,
@@ -24546,6 +24578,7 @@
 	    endTime: _propTypes2.default.string
 	  }).isRequired,
 	  listItems: _propTypes2.default.arrayOf(_propTypes2.default.object),
+	  listItemTemplate: _propTypes2.default.func,
 	  rootClass: _propTypes2.default.string
 	};
 
@@ -24555,11 +24588,13 @@
 	  buttonLabel: "Add to My Calendar",
 	  buttonTemplate: { caret: "right" },
 	  buttonIconClass: "react-add-to-calendar__icon--",
+	  className: null,
 	  useFontAwesomeIcons: true,
 	  buttonWrapperClass: "react-add-to-calendar__wrapper",
 	  displayItemIcons: true,
 	  optionsOpen: false,
 	  dropdownClass: "react-add-to-calendar__dropdown",
+	  dropdownTemplate: dropdownTemplate,
 	  event: {
 	    title: "Sample Event",
 	    description: "This is the sample event provided as an example only",
@@ -24568,6 +24603,7 @@
 	    endTime: "2016-09-16T21:45:00-04:00"
 	  },
 	  listItems: [{ apple: "Apple Calendar" }, { google: "Google" }, { outlook: "Outlook" }, { outlookcom: "Outlook.com" }, { yahoo: "Yahoo" }],
+	  listItemTemplate: listItemTemplate,
 	  rootClass: "react-add-to-calendar"
 	};
 
@@ -42775,6 +42811,25 @@
 	          _react2.default.createElement(AddToCalendarStyled, { buttonLabel: "Add", event: event }),
 	          _react2.default.createElement(AddToCalendarStyled, {
 	            buttonLabel: "Add",
+	            listItemTemplate: function listItemTemplate(_ref) {
+	              var listItem = _ref.listItem,
+	                  event = _ref.event,
+	                  itemClick = _ref.itemClick,
+	                  url = _ref.url;
+
+	              var currentItem = Object.keys(listItem)[0];
+	              var currentLabel = listItem[currentItem];
+
+	              return _react2.default.createElement(
+	                "li",
+	                { key: currentLabel },
+	                _react2.default.createElement(
+	                  "a",
+	                  { href: url, target: "_blank" },
+	                  currentLabel
+	                )
+	              );
+	            },
 	            buttonTemplate: function buttonTemplate(props, toggleCallback) {
 	              return _react2.default.createElement(
 	                "div",
